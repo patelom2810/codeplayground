@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML/CSS/JS Playground</title>
+  
+  <!-- CodeMirror Styles and Scripts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/theme/material-darker.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/codemirror.min.js"></script>
+
+  <!-- Language modes -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/mode/xml/xml.min.js"></script>
+
+  <!-- Addons for better editing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/addon/selection/active-line.min.js"></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- html2canvas for code snapshot -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="loader-container" id="loader">
+    <div class="loader">
+      <div class="loader-circle"></div>
+      <div class="loader-circle"></div>
+      <div class="loader-circle"></div>
+      <div class="loader-text">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Flying Elements Container -->
+  <div class="flying-elements-container" id="flying-elements"></div>
+  
+  <!-- Control Panel -->
+  <div class="control-panel">
+    <div class="control-icons">
+      <div class="control-icon" onclick="exportCode()" title="Export Code">
+        <i class="fas fa-file-export"></i>
+      </div>
+      <div class="control-icon" onclick="resetEditors()" title="Reset">
+        <i class="fas fa-sync-alt"></i>
+      </div>
+      <div class="control-icon" onclick="showTemplatesModal()" title="Templates">
+        <i class="fas fa-th-large"></i>
+      </div>
+      <div class="control-icon" onclick="toggleTheme()" title="Toggle Theme">
+        <i class="fas fa-moon" id="theme-icon"></i>
+      </div>
+      <div class="control-icon" onclick="takeSnapshot()" title="Take Snapshot">
+        <i class="fas fa-camera"></i>
+      </div>
+      <div class="control-icon" onclick="refreshPreview()" title="Refresh Preview">
+        <i class="fas fa-sync"></i>
+      </div>
+      <div class="control-icon" onclick="scrollToAbout()" title="About">
+        <i class="fas fa-info-circle"></i>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-code"></i>
+          <span>HTML/CSS/JS Playground</span>
+        </div>
+      </div>
+      
+      <!-- Subheading for each section -->
+      <div class="sub-heading">
+        <p><strong>Interactive Code Editor</strong><br>
+          Edit your HTML, CSS, and JS in the respective editors below. The preview will be updated live.
+        </p>
+      </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" data-tab="html">
+        <i class="fab fa-html5"></i> HTML
+      </button>
+      <button class="tab-btn" data-tab="css">
+        <i class="fab fa-css3-alt"></i> CSS
+      </button>
+      <button class="tab-btn" data-tab="js">
+        <i class="fab fa-js"></i> JavaScript
+      </button>
+      <button class="tab-btn" data-tab="preview">
+        <i class="fas fa-play"></i> Preview
+      </button>
+    </div>
+
+    <!-- Editor Containers -->
+    <div class="editors-container">
+      <!-- HTML Editor -->
+      <div class="tab-content active" data-tab="html">
+        <div class="editor" id="html-editor"></div>
+      </div>
+
+      <!-- CSS Editor -->
+      <div class="tab-content" data-tab="css">
+        <div class="editor" id="css-editor"></div>
+      </div>
+
+      <!-- JavaScript Editor -->
+      <div class="tab-content" data-tab="js">
+        <div class="editor" id="js-editor"></div>
+      </div>
+
+      <!-- Preview Area -->
+      <div class="tab-content" data-tab="preview">
+        <div class="preview-container">
+          <div class="preview-header">
+            <div><i class="fas fa-play"></i> Live Preview</div>
+            <button onclick="refreshPreview()" class="refresh-btn"><i class="fas fa-sync"></i></button>
+          </div>
+          <iframe id="preview" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Us Section -->
+    <section class="about-us-section" id="about-us-section">
+      <div class="about-container">
+        <h2><i class="fas fa-info-circle"></i> About This Playground</h2>
+        
+        <div class="about-grid">
+          <div class="about-card">
+            <h3><i class="fas fa-star"></i> Features</h3>
+            <ul>
+              <li>Real-time HTML, CSS, and JavaScript editing</li>
+              <li>Live preview of your code</li>
+              <li>Dark/Light theme toggle</li>
+              <li>Code snapshots for sharing</li>
+              <li>Export your project as HTML file</li>
+              <li>Pre-built templates for quick starts</li>
+              <li>Local storage to save your work</li>
+            </ul>
+          </div>
+          
+          <div class="about-card">
+            <h3><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h3>
+            <div class="shortcuts-list">
+              <div class="shortcut">
+                <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                <span>Save to local storage</span>
+              </div>
+              <div class="shortcut">
+                <kbd>Ctrl</kbd> + <kbd>E</kbd>
+                <span>Export code</span>
+              </div>
+              <div class="shortcut">
+                <kbd>Ctrl</kbd> + <kbd>R</kbd>
+                <span>Refresh preview</span>
+              </div>
+              <div class="shortcut">
+                <kbd>Ctrl</kbd> + <kbd>D</kbd>
+                <span>Toggle dark mode</span>
+              </div>
+              <div class="shortcut">
+                <kbd>1-4</kbd>
+                <span>Switch between tabs</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="about-card">
+            <h3><i class="fas fa-code"></i> How To Use</h3>
+            <ol>
+              <li>Write HTML in the HTML editor</li>
+              <li>Add styles in the CSS editor</li>
+              <li>Add functionality in the JS editor</li>
+              <li>See results instantly in the preview</li>
+              <li>Use templates to get started quickly</li>
+              <li>Take snapshots to share your code</li>
+              <li>Export your complete project</li>
+            </ol>
+          </div>
+          
+          <div class="about-card">
+            <h3><i class="fas fa-user-circle"></i> Created By</h3>
+            <p>This interactive code playground was developed by Om Patel, a passionate web developer dedicated to creating tools that help others learn and experiment with web technologies.</p>
+            <p>Version: 1.2.0 | Last Updated: April 2025</p>
+            <div class="creator-social">
+              <a href="https://github.com/patelom2810" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+              <a href="404.html" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+              <a href="mailto:omashwin28@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        
+        <p>Made with <i class="fas fa-heart"></i> by Om Patel</p>
+        <div class="social-links">
+          <a href="https://github.com/patelom2810" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+          <a href="404.html" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.linkedin.com/in/om-patel-1a929831b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="https://www.instagram.com/ommpatel28?igsh=MXZwdWc4eXNsaTlhbA==" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          
+        </div>
+        <div class="copyright">
+          &copy; 2025 HTML/CSS/JS Playground. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modals -->
+  <div id="snapshot-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" data-modal="snapshot-modal">&times;</span>
+      <h2><i class="fas fa-camera"></i> Code Snapshot</h2>
+      <div class="snapshot-options">
+        <button class="snapshot-option active" data-editor="current">Current Editor</button>
+        <button class="snapshot-option" data-editor="html">HTML</button>
+        <button class="snapshot-option" data-editor="css">CSS</button>
+        <button class="snapshot-option" data-editor="js">JavaScript</button>
+        <button class="snapshot-option" data-editor="all">All Editors</button>
+      </div>
+      <div id="snapshot-container"></div>
+      <button id="download-snapshot" class="btn"><i class="fas fa-download"></i> Download Image</button>
+      <button id="save-snapshot" class="btn"><i class="fas fa-save"></i> Save as File</button>
+    </div>
+  </div>
+
+  <!-- Templates Modal -->
+  <div id="templates-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" data-modal="templates-modal">&times;</span>
+      <h2><i class="fas fa-th-large"></i> Code Templates</h2>
+      <div class="templates-grid">
+        <div class="template-card" data-template="basic">
+          <h3>Basic HTML</h3>
+          <p>Simple HTML5 boilerplate</p>
+        </div>
+        <div class="template-card" data-template="flexbox">
+          <h3>Flexbox Layout</h3>
+          <p>Responsive flexbox layout</p>
+        </div>
+        <div class="template-card" data-template="form">
+          <h3>Contact Form</h3>
+          <p>Styled contact form with validation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Container -->
+  <div id="notification-container"></div>
+
+  <!-- External JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
